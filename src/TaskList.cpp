@@ -23,5 +23,6 @@ void TaskList::printList() {
 
     while (curr != nullptr) {
         std::cout << curr->get_full_task() << std::endl;
+        curr = curr->next;
     }
 }
