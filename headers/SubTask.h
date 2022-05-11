@@ -8,7 +8,9 @@ class SubTask : public TaskType {
   public:
     SubTask(std::string title, std::string desc) : TaskType(title, desc) {}
 
-    virtual std::string get_full_task();
+    virtual std::string getFullTask();
+    virtual void addSubTask(std::string t, std::string d) { return; }
+    virtual void addSubTask(std::string t) { return; }
 };
 
 #endif

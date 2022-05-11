@@ -10,7 +10,9 @@ class Task : public TaskType {
     TaskType* subTask;
     Task(std::string title, std::string desc) : TaskType(title, desc), subTask(nullptr) {}
     
-    virtual std::string get_full_task();
+    virtual void addSubTask(std::string, std::string);
+    virtual void addSubTask(std::string t) {addSubTask(t, "No Description");}
+    virtual std::string getFullTask();
 };
 
 #endif

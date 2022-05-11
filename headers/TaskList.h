@@ -9,9 +9,10 @@ class TaskList {
     TaskType* head;
     TaskType* tail;
     TaskList(): head(nullptr), tail(nullptr) {}
-    void push_back(std::string, std::string);
-    void push_back(std::string t) { push_back(t, "No Description"); }
+    void pushBack(std::string, std::string);
+    void pushBack(std::string t) { pushBack(t, "No Description"); }
     void printList();
+    TaskType* getTask(std::string);
 };
 
 #endif
