@@ -4,13 +4,13 @@
 #include <iostream>
 
 class TaskType {
-  private:
+  protected:
     std::string title;
     std::string description;
     //date
   public:
     TaskType* next;
-    TaskType(std::string title, std::string desc) : description(desc), title(title) {}
+    TaskType(std::string title, std::string desc) : description(desc), title(title), next(nullptr) {}
 
     void edit_title(std::string t) { title = t; }
     std::string get_title() { return title; }

@@ -5,14 +5,11 @@
 #include "TaskType.h"
 
 class Task : public TaskType {
-  private:
-    std::string title;
-    std::string description;
   public:
     TaskType* next;
     TaskType* subTask;
-    Task(std::string title, std::string desc) : TaskType(title, desc) {}
-
+    Task(std::string title, std::string desc) : TaskType(title, desc), subTask(nullptr) {}
+    
     virtual std::string get_full_task();
 };
 
