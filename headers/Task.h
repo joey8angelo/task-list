@@ -14,6 +14,7 @@ class Task {
     SubTask* subTask;
 
     Task(std::string title, std::string desc) : title(title), description(), subTask(nullptr), next(nullptr) {}
+    ~Task() { delete subTask; }
     
     void editTitle(std::string t) { title = t; }
     std::string getTitle() { return title; }
