@@ -6,13 +6,14 @@
 
 class TaskList {
   public:
-    TaskType* head;
-    TaskType* tail;
+    Task* head;
+    Task* tail;
     TaskList(): head(nullptr), tail(nullptr) {}
     void pushBack(std::string, std::string);
     void pushBack(std::string t) { pushBack(t, "No Description"); }
+    bool remove(std::string);
     void printList();
-    TaskType* getTask(std::string);
+    Task* getTask(std::string);
 };
 
 #endif

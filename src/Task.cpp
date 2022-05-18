@@ -1,6 +1,5 @@
 #include <iostream>
 #include "../headers/Task.h"
-#include "../headers/SubTask.h"
 
 std::string Task::getFullTask() {
     if (this->subTask == nullptr)
