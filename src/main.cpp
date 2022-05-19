@@ -21,8 +21,11 @@ int main () {
         cout << "Enter \"2\" to remove a task" << endl;
         cout << "Enter \"3\" to add a subtask to a task" << endl;
         cout << "Enter \"4\" to print the list" << endl;
-        cout << "Enter \"0\" to quit\n: "; 
+        cout << "Enter \"5\" to sort the list in alphabetical order" << endl;
+        cout << "Enter \"0\" to quit\n: ";
         cin >> input;
+        cin.clear();
+        cin.ignore(10000,'\n');
 
         switch(input) {
           case 0:
@@ -31,7 +34,7 @@ int main () {
             cout << "\033[2J\033[1;1H";
             cout << "Insert Task" << endl << endl;;
             cout << "Enter the title for this task: ";
-            cin >> title;
+            std::getline(cin, title);
             list.pushBack(title);
             break;
           case 2:
@@ -57,7 +60,7 @@ int main () {
             cout << "\033[2J\033[1;1H";
             cout << "Add Subtask" << endl << endl;
             cout << "Enter the name of the task to add a subtask to: ";
-            cin >> title;
+            std::getline(cin, title);
             cout << "\033[2J\033[1;1H";
             cout << "Add Subtask" << endl << endl;
 
@@ -70,7 +73,7 @@ int main () {
 
             cout << "Task: " << title << endl;
             cout << "Enter the name of the subtask: ";
-            cin >> subTitle;
+            std::getline(cin, subTitle);
             curr->addSubTask(subTitle);
             cout << "Added subtask \"" << subTitle << "\" to task \"" << title << "\"\nExiting..." << endl;
             std::this_thread::sleep_for (std::chrono::seconds(3));
@@ -81,8 +84,11 @@ int main () {
             cout << "Print List" << endl << endl;
             list.printList();
             cout << "Enter \"q\"to exit: ";
-            cin >> title; // do nothing
+            std::getline(cin, title); // do nothing
             break;
+            case 5:
+                list.sortAlphabetically();
+                break;
           default:
             break;
         }

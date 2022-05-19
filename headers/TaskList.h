@@ -5,6 +5,9 @@
 #include "Task.h"
 
 class TaskList {
+  private:
+    bool compareTitle(Task*, Task*);
+    void swap(Task*, Task*);
   public:
     Task* head;
     Task* tail;
@@ -13,6 +16,7 @@ class TaskList {
         while (head != nullptr) {
             Task* curr = head;
             head = head->next;
+            if (curr->subTask != nullptr) { delete curr->subTask; }
             delete curr;
         }
         head = nullptr;
@@ -23,6 +27,7 @@ class TaskList {
     bool remove(std::string);
     void printList();
     Task* getTask(std::string);
+    void sortAlphabetically();
 };
 
 #endif

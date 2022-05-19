@@ -9,10 +9,13 @@ void TaskList::pushBack(std::string t, std::string d) {
     else if (head == tail) {
         head->next = new Task(t, d);
         tail = head->next;
+        tail->prev = head;
     }
     else {
+        Task* temp = tail;
         tail->next = new Task(t, d);
         tail = tail->next;
+        tail->prev = temp;
     }
 }
 
@@ -34,7 +37,7 @@ Task* TaskList::getTask(std::string title) {
         else
             curr = curr->next;
     }
-    return nullptr;
+    return curr;
 }
 
 bool TaskList::remove(std::string t) {
@@ -71,4 +74,47 @@ bool TaskList::remove(std::string t) {
         delete curr;
     }
     return true;
+}
+
+void TaskList::sortAlphabetically() {
+    Task* i;
+    Task* j;
+    if (head == nullptr) { return; }
+    else if (head == tail) { return; }
+    else if (head->next == tail) {
+        if (compareTitle(tail, head)) {
+            swap(tail, head);
+        }
+    } 
+    else {
+        i = head->next;
+        while (i != nullptr) {
+            j = i;
+            while (j->prev != nullptr && compareTitle(j, j->prev)) {
+                swap(j, j->prev);
+                j = j->prev;
+            }
+            i = i->next;
+        }
+
+    }
+}
+
+bool TaskList::compareTitle(Task* r, Task* l) {
+    if (r->getTitle() < l->getTitle()) { return true; }
+    else {return false; }
+}
+
+void TaskList::swap(Task* r, Task* l) {
+    std::string temp = r->getTitle();
+    r->editTitle(l->getTitle());
+    l->editTitle(temp);
+    
+    temp = r->getDescription();
+    r->editDescription(l->getDescription());
+    l->editDescription(temp);
+
+    SubTask* tempT = r->subTask;
+    r->subTask = l->subTask;
+    l->subTask = tempT;
 }
