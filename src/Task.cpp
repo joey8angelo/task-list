@@ -1,11 +1,16 @@
 #include <iostream>
 #include "../headers/Task.h"
+#include "../headers/Date.h"
 
 std::string Task::getFullTask() {
-    if (this->subTask == nullptr)
-        return "Title: " + title + "\nDescription: " + description;
-    else
-        return "Title: " + title + "\nDescription: " + description + "\n" + this->subTask->getFullTask();
+    std::string output = "Title: " + title;
+    if (description != "") { output += "\nDescription: " + description; }
+    if (this->subTask != nullptr) { output += "\n" + this->subTask->getFullTask(); }
+    if (this->date != nullptr) {
+        output += "\n" + this->date->getDateFormatted();
+        output += "\n" + this->date->timeUntilDate(this); 
+    }
+    return output;
 }
 
 void Task::addSubTask(std::string title, std::string description) {

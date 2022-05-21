@@ -1,7 +1,7 @@
 #ifndef TASKLIST_H
 #define TASKLIST_H
 
-#include <iostream>
+#include <string>
 #include "Task.h"
 
 class TaskList {
@@ -17,13 +17,14 @@ class TaskList {
             Task* curr = head;
             head = head->next;
             if (curr->subTask != nullptr) { delete curr->subTask; }
+            if (curr->date != nullptr) { delete curr->date; }
             delete curr;
         }
         head = nullptr;
         tail = nullptr;
     }
     void pushBack(std::string, std::string);
-    void pushBack(std::string t) { pushBack(t, "No Description"); }
+    void pushBack(std::string t) { pushBack(t, ""); }
     bool remove(std::string);
     void printList();
     Task* getTask(std::string);
