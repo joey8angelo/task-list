@@ -293,5 +293,4 @@ void addDate(TaskList* list) {
         }
         return;
     }
-
 }

@@ -55,22 +55,18 @@ bool TaskList::remove(std::string t) {
         else {
             head = head->next;
             delete curr;
+            head->prev = nullptr;
         }
     }
     else if (curr == tail) {
+        tail = curr->prev;
+        tail->next = nullptr;
         delete curr;
-        curr = head;
-        while (curr->next != nullptr) {
-            curr = curr->next;
-        }
-        tail = curr;
     }
     else {
-        Task* prev = head;
-        while (prev->next != curr) {
-            prev = prev->next;
-        }
+        Task* prev = curr->prev;
         prev->next = curr->next;
+        prev->next->prev = prev;
         delete curr;
     }
     return true;
