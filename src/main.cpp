@@ -32,6 +32,7 @@ int main () {
         cout << "Enter \"5\" to sort the list in alphabetical order" << endl;
         cout << "Enter \"6\" to edit a task" << endl;
         cout << "Enter \"7\" to add a date to a task" << endl;
+        cout << "Enter \"8\" to sort the list in chronological order" << endl;
         cout << "Enter \"0\" to quit\n: ";
         cin >> input;
         cin.clear();
@@ -69,7 +70,10 @@ int main () {
           case 7:
             addDate(&list);
             break;
-
+          case 8:
+            list.sortByDate();
+            break;
+            
           default:
             break;
         }
@@ -92,7 +96,7 @@ void removeTask(TaskList* list) {
     cout << "\033[2J\033[1;1H";
     cout << "Remove Task" << endl << endl;
     cout << "Enter the name of the task to remove: ";
-    cin >> title;
+    std::getline(cin, title);
     if (!(list->remove(title))) {
         cout << "\033[2J\033[1;1H";
         cout << "Remove a Task" << endl << endl;

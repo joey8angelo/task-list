@@ -7,6 +7,7 @@
 class TaskList {
   private:
     bool compareTitle(Task*, Task*);
+    bool compareDate(Task*, Task*);
     void swap(Task*, Task*);
   public:
     Task* head;
@@ -29,6 +30,7 @@ class TaskList {
     void printList();
     Task* getTask(std::string);
     void sortAlphabetically();
+    void sortByDate();
 };
 
 #endif

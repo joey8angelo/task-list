@@ -28,6 +28,7 @@ class Date {
     bool setDate(int, int, int);
     std::string getDateFormatted();
     std::string timeUntilDate(Task*);
+    long int getDateInSeconds();
 };
 
 #endif

@@ -144,6 +144,7 @@ std::string Date::getDateFormatted() {
     else {
         output += std::to_string(hour) + ":" + formatMinute(min) + std::to_string(min) + "AM";
     }
+    output += " " + std::to_string(year);
     return output;
 }
 
@@ -167,73 +168,82 @@ std::string Date::timeUntilDate(Task* task) {
     int amount;
     std::vector<int> TTD = task->date->timeUntilDate();
     std::string output = "";
-    if (min == -1) { return ""; }
     for (int i = 0; i < TTD.size(); i++) {
 
         amount = abs(TTD.at(i));
 
         if (TTD.at(i) < 0 && i == 0) {
             output += std::to_string(amount) + " year";
-            if (amount != 1) { output += "s "; }
-            output += "ago";
+            if (amount != 1) { output += "s"; }
+            output += " ago";
             break;
         }
         else if (TTD.at(i) > 0 && i == 0) {
-            output += std::to_string(amount) + " year";
-            if (amount != 1) { output += "s "; }
-            output += "away";
+            output +=  "In " + std::to_string(amount) + " year";
+            if (amount != 1) { output += "s"; }
             break;
         }
         if (TTD.at(i) < 0 && i == 1) {
             output += std::to_string(amount) + " month";
-            if (amount != 1) { output += "s "; }
-            output += "ago";
+            if (amount != 1) { output += "s"; }
+            output += " ago";
             break;
         }
         else if (TTD.at(i) > 0 && i == 1) {;
-            output += std::to_string(amount) + " month";
-            if (amount != 1) { output += "s "; }
-            output += "away";
+            output +=  "In " + std::to_string(amount) + " month";
+            if (amount != 1) { output += "s"; }
             break;
         }
         if (TTD.at(i) < 0 && i == 2) {
             output += std::to_string(amount) + " day";
-            if (amount != 1) { output += "s "; }
-            output += "ago";
+            if (amount != 1) { output += "s"; }
+            output += " ago";
             break;
         }
         else if (TTD.at(i) > 0 && i == 2) {
-            output += std::to_string(amount) + " day";
-            if (amount != 1) { output += "s "; }
-            output += "away";
+            output +=  "In " + std::to_string(amount) + " day";
+            if (amount != 1) { output += "s"; }
             break;
         }
         if (TTD.at(i) < 0 && i == 3) {
             output += std::to_string(amount) + " hour";
-            if (amount != 1) { output += "s "; }
-            output += "ago";
+            if (amount != 1) { output += "s"; }
+            output += " ago";
             break;
         }
         else if (TTD.at(i) > 0 && i == 3) {
             amount = TTD.at(i);
-            output += std::to_string(amount) + " hour";
-            if (amount != 1) { output += "s "; }
-            output += "away";
+            output += "In " + std::to_string(amount) + " hour";
+            if (amount != 1) { output += "s"; }
             break;
         }
         if (TTD.at(i) < 0 && i == 4) {
             output += std::to_string(amount) + " minute";
-            if (amount != 1) { output += "s "; }
-            output += "ago";
+            if (amount != 1) { output += "s"; }
+            output += " ago";
             break;
         }
         else if (TTD.at(i) > 0 && i == 4) {
             amount = TTD.at(i);
-            output += std::to_string(amount) + " minute";
+            output += "In " + std::to_string(amount) + " minute";
             if (amount != 1) { output += "s "; }
-            output += "away";
             break;
         }
     }
+    return output;
+}
+
+long int Date::getDateInSeconds() {
+    long int output = 0;
+    std::vector<int> vec = this->timeUntilDate();
+    output += vec.at(4) * 60;
+    output += vec.at(3) * 3600;
+    output += vec.at(2) * 86400;
+    output += vec.at(1) * 86400 * getNumberOfDays(year, month);
+    if (getNumberOfDays(year, 2) == 28)
+        output += vec.at(0) * 365 * 86400;
+    else
+        output += vec.at(0) * 366 * 86400;
+
     return output;
 }

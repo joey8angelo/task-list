@@ -101,6 +101,38 @@ bool TaskList::compareTitle(Task* r, Task* l) {
     else {return false; }
 }
 
+void TaskList::sortByDate() {
+    Task* i;
+    Task* j;
+    if (head == nullptr) { return; }
+    else if (head == tail) { return; }
+    else if (head->next == tail) {
+        if (compareDate(tail, head)) {
+            swap(tail, head);
+        }
+    } 
+    else {
+        i = head->next;
+        while (i != nullptr) {
+            j = i;
+            while (j->prev != nullptr && compareDate(j, j->prev)) {
+                swap(j, j->prev);
+                j = j->prev;
+            }
+            i = i->next;
+        }
+
+    }
+}
+
+bool TaskList::compareDate(Task* r, Task* l) {
+    if (l->date == nullptr) { return true; }
+    if (r->date == nullptr) { return false; }
+
+    if (r->date->getDateInSeconds() < l->date->getDateInSeconds()) { return true; }
+    else { return false; }
+}
+
 void TaskList::swap(Task* r, Task* l) {
     std::string temp = r->getTitle();
     r->editTitle(l->getTitle());
@@ -113,4 +145,8 @@ void TaskList::swap(Task* r, Task* l) {
     SubTask* tempT = r->subTask;
     r->subTask = l->subTask;
     l->subTask = tempT;
+
+    Date* tempD = r->date;
+    r->date = l->date;
+    l->date = tempD;
 }
