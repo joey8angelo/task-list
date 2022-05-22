@@ -31,7 +31,7 @@ int main () {
         cout << "Enter \"4\" to print the list" << endl;
         cout << "Enter \"5\" to sort the list in alphabetical order" << endl;
         cout << "Enter \"6\" to edit a task" << endl;
-        cout << "Enter \"7\" to add a date to a task" << endl;
+        cout << "Enter \"7\" to set a tasks date" << endl;
         cout << "Enter \"8\" to sort the list in chronological order" << endl;
         cout << "Enter \"0\" to quit\n: ";
         cin >> input;
@@ -52,7 +52,6 @@ int main () {
 
           case 3:
             addSubtask(&list);
-
             break;
 
           case 4:
@@ -84,7 +83,7 @@ void insertTask(TaskList* list) {
     std::string title;
 
     cout << "\033[2J\033[1;1H";
-    cout << "Insert Task" << endl << endl;;
+    cout << "Insert Task" << endl << endl;
     cout << "Enter the title for this task: ";
     std::getline(cin, title);
     list->pushBack(title);
@@ -160,10 +159,12 @@ void editTask(TaskList* list) {
     
     cout << "\033[2J\033[1;1H";
     cout << "Edit " << title << endl << endl;
-    cout << "Enter \"1\" to edit the tasks title" << endl;
-    cout << "Enter \"2\" to edit the tasks description" << endl;
+    cout << "Enter \"1\" to edit the title" << endl;
+    cout << "Enter \"2\" to edit the description" << endl;
+    cout << "Enter \"3\" to remove the description" << endl;
+    cout << "Enter \"4\" to remove the date" << endl;
     if (curr->subTask != nullptr) {
-        cout << "Enter \"3\" to edit the subtask" << endl;
+        cout << "Enter \"5\" to edit the subtask" << endl;
     }
     cout << ": ";
     cin >> input;
@@ -190,6 +191,13 @@ void editTask(TaskList* list) {
         return;
 
       case 3:
+        curr->editDescription("");
+        break;
+
+      case 4:
+        curr->removeDate();
+
+      case 6:
         if (curr->subTask == nullptr) { return; }
         cout << "\033[2J\033[1;1H";
         cout << "Edit " << curr->subTask->getTitle() << endl << endl;
@@ -234,26 +242,22 @@ void addDate(TaskList* list) {
     int y, m, d, h, min;
 
     cout << "\033[2J\033[1;1H";
-    cout << "Add Date" << endl << endl;
+    cout << "Set Date" << endl << endl;
     cout << "Enter the name of the task: ";
     std::getline(cin, title);
     cout << "\033[2J\033[1;1H";
-    cout << "Add Date" << endl << endl;
+    cout << "Set Date" << endl << endl;
     curr = list->getTask(title);
 
     if (curr == nullptr) {
-        cout << "Could not find task with the name \"" << title << "\"\nExiting Add Date..." << endl;
+        cout << "Could not find task with the name \"" << title << "\"\nExiting Set Date..." << endl;
         std::this_thread::sleep_for (std::chrono::seconds(3));
         return;
     }
-    if (curr->date != nullptr) {
-        cout << title << " already has a date, to edit it go to \"Edit Task\"\nExiting Add Date..." << endl;
-        std::this_thread::sleep_for (std::chrono::seconds(3));
-        return;
-    }
+    if (curr->date == nullptr) { curr->addDate(); }
 
     cout << "\033[2J\033[1;1H";
-    cout << "Add Date" << endl;
+    cout << "Set Date" << endl;
     cout << "Enter Date in form MM/DD/YYYY: ";
     cin >> input;
     m = atoi(input.substr(0, 2).c_str());
@@ -275,23 +279,21 @@ void addDate(TaskList* list) {
         h = atoi(input.substr(0, 2).c_str());
         min = atoi(input.substr(3, 4).c_str());
 
-        curr->addDate();
         bool date = curr->date->setDate(y, m, d, h, min);
 
         if (!date) {
             curr->removeDate();
-            cout << "Invalid date\nExiting Add Date..." << endl;
+            cout << "Invalid date\nExiting Set Date..." << endl;
             std::this_thread::sleep_for (std::chrono::seconds(3));
             return;
         }
         return;
     }
     else {
-        curr->addDate();
         bool date = curr->date->setDate(y, m, d);
         if (!date) {
             curr->removeDate();
-            cout << "Invalid date\nExiting Add Date..." << endl;
+            cout << "Invalid date\nExiting Set Date..." << endl;
             std::this_thread::sleep_for (std::chrono::seconds(3));
             return;
         }

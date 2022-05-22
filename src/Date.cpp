@@ -139,12 +139,12 @@ std::string Date::getDateFormatted() {
         }
     }
     else if (hour == -1 && min == -1){
+        output += std::to_string(year);
         return output;
     }
     else {
-        output += std::to_string(hour) + ":" + formatMinute(min) + std::to_string(min) + "AM";
+        output += std::to_string(hour) + ":" + formatMinute(min) + std::to_string(min) + "AM" + " " + std::to_string(year);;
     }
-    output += " " + std::to_string(year);
     return output;
 }
 
