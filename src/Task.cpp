@@ -25,3 +25,13 @@ std::string Task::getFullTask() {
 void Task::addSubTask(std::string title, std::string description) {
     this->subTask = new SubTask(title, description);
 }
+
+void Task::removeDate() {
+    delete date;
+    this->date = nullptr;
+}
+
+void Task::removeSubTask() {
+    delete subTask;
+    this->subTask = nullptr;
+}
