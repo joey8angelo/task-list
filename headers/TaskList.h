@@ -13,15 +13,7 @@ class TaskList {
     Task* head;
     Task* tail;
     TaskList(): head(nullptr), tail(nullptr) {}
-    ~TaskList() {
-        while (head != nullptr) {
-            Task* curr = head;
-            head = head->next;
-            delete curr;
-        }
-        head = nullptr;
-        tail = nullptr;
-    }
+    ~TaskList();
     void pushBack(std::string, std::string);
     void pushBack(std::string t) { pushBack(t, ""); }
     bool remove(std::string);

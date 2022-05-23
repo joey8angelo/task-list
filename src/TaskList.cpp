@@ -1,6 +1,16 @@
 #include <iostream>
 #include "../headers/TaskList.h"
 
+TaskList::~TaskList() {
+    while (head != nullptr) {
+        Task* curr = head;
+        head = head->next;
+        delete curr;
+    }
+    head = nullptr;
+    tail = nullptr;
+}
+
 void TaskList::pushBack(std::string t, std::string d) {
     if (head == nullptr) {
         head = new Task(t, d);

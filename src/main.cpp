@@ -40,6 +40,7 @@ int main () {
         cout << "Enter \"8\" to sort the list in chronological order" << endl;
         cout << "Enter \"9\" to undo" << endl;
         cout << "Enter \"0\" to quit\n: ";
+        
         cin >> input;
         cin.clear();
         cin.ignore(10000,'\n');
@@ -75,9 +76,11 @@ int main () {
           case 7:
             addDate();
             break;
+          
           case 8:
             list.sortByDate();
             break;
+          
           case 9:
             undo();
             
@@ -93,6 +96,7 @@ void insertTask() {
     cout << "\033[2J\033[1;1H";
     cout << "Insert Task" << endl << endl;
     cout << "Enter the title for this task: ";
+
     std::getline(cin, title);
     list.pushBack(title);
 }
@@ -104,6 +108,7 @@ void removeTask() {
     cout << "Remove Task" << endl << endl;
     cout << "Enter the name of the task to remove: ";
     std::getline(cin, title);
+
     if (!(list.remove(title))) {
         cout << "\033[2J\033[1;1H";
         cout << "Remove a Task" << endl << endl;
@@ -121,6 +126,7 @@ void addSubtask(){
     cout << "Add Subtask" << endl << endl;
     cout << "Enter the name of the task to add a subtask to: ";
     std::getline(cin, title);
+
     cout << "\033[2J\033[1;1H";
     cout << "Add Subtask" << endl << endl;
     curr = list.getTask(title);
@@ -130,10 +136,11 @@ void addSubtask(){
         std::this_thread::sleep_for (std::chrono::seconds(3));
         return;
     }
-    
+
     insertVec(new addNewSubtask(curr));
     cout << "Task: " << title << endl;
     cout << "Enter the name of the subtask: ";
+
     std::getline(cin, subTitle);
     curr->addSubTask(subTitle);
 }
@@ -144,6 +151,7 @@ void printList() {
     cout << "\033[2J\033[1;1H";
     cout << "Print List" << endl << endl;
     list.printList();
+
     cout << "Enter \"q\"to exit: ";
     std::getline(cin, voidInput); // do nothing
 }
@@ -157,9 +165,11 @@ void edit() {
     cout << "Edit Task" << endl << endl;
     cout << "Enter the name of the task: ";
     std::getline(cin, title);
+
     cout << "\033[2J\033[1;1H";
     cout << "Edit Task" << endl << endl;
     curr = list.getTask(title);
+
     if (curr == nullptr) {
         cout << "Could not find task with the name \"" << title << "\"\nExiting Edit Task..." << endl;
         std::this_thread::sleep_for (std::chrono::seconds(3));
@@ -211,7 +221,8 @@ void edit() {
         if (curr->getDescription() == "") { return; }
         insertVec(new editTask(curr, title, curr->getDescription()));
         curr->editDescription("");
-        break;
+        
+        return;
 
       case 4:
         if (curr->date == nullptr) { return; }
@@ -219,14 +230,19 @@ void edit() {
                                  curr->date->day, curr->date->hour, curr->date->min));
         curr->removeDate();
 
+        return;
+
       case 5:
         if (curr->subTask == nullptr) { return; }
+
         insertVec(new editSubtask(curr->subTask, curr->subTask->getTitle(), curr->subTask->getDescription()));
+
         cout << "\033[2J\033[1;1H";
         cout << "Edit " << curr->subTask->getTitle() << endl << endl;
         cout << "Enter \"1\" to edit the subtasks title" << endl;
         cout << "Enter \"2\" to edit the subtasks description" << endl;
         cout << ": ";
+
         cin >> input;
         cin.clear();
         cin.ignore(10000,'\n');
@@ -258,10 +274,11 @@ void edit() {
         if (curr->subTask == nullptr) { return; }
         insertVec(new removeSubtask(curr, curr->subTask->getTitle(), curr->subTask->getDescription()));
         curr->removeSubTask();
-        break;
+
+        return;
 
       default:
-        break;
+        return;
     }          
 }
 
@@ -296,6 +313,7 @@ void addDate() {
     cout << "Set Date" << endl;
     cout << "Enter Date in form MM/DD/YYYY: ";
     cin >> input;
+
     m = atoi(input.substr(0, 2).c_str());
     d = atoi(input.substr(3, 4).c_str());
     y = atoi(input.substr(6, 9).c_str());
@@ -327,6 +345,7 @@ void addDate() {
     }
     else {
         bool date = curr->date->setDate(y, m, d);
+
         if (!date) {
             undo();
             cout << "Invalid date\nExiting Set Date..." << endl;
@@ -339,6 +358,7 @@ void addDate() {
 
 void undo() {
     int vecSize = undoVec.size();
+    
     if (vecSize == 0) {
         cout << "Cannot undo further" << endl;
         std::this_thread::sleep_for (std::chrono::seconds(2));

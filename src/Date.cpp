@@ -21,6 +21,7 @@ bool Date::setDate(int y, int m, int d, int h, int min) {
 Date::Date() {
     std::time_t time = std::time(NULL);
     std::tm* localTime = localtime(&time);
+
     year = 1900 + localTime->tm_year;
     month = 1 + localTime->tm_mon;
     day = localTime->tm_mday;
@@ -38,6 +39,7 @@ std::vector<int> Date::timeUntilDate() {
     vec.push_back(day -(localTime->tm_mday));
     vec.push_back(hour - (localTime->tm_hour));
     vec.push_back(min - (localTime->tm_min));
+
     return vec;
 }
 
@@ -62,6 +64,7 @@ bool Date::isValidDate(int y, int m, int d, int h, int min) {
     if (h == -1 || min == -1) { return true; }
     if (h < 0 || h > 24) { return false; }
     if (min < 0 || min > 60) { return false; }
+
     return true;
 }
 
@@ -130,13 +133,15 @@ std::string Date::getDateFormatted() {
         output += "December ";
         break;  
     }
+
     output += std::to_string(day) + " ";
+
     if (hour >= 12) {
         if (hour == 12) { output += std::to_string(hour) + ":" + formatMinute(min) + std::to_string(min) + "PM"; }
+        
         else if (hour == 24) { output += std::to_string(hour - 12) + ":" + formatMinute(min) + std::to_string(min) + "AM"; }
-        else {
-            output += std::to_string(hour - 12) + ":" + formatMinute(min) + std::to_string(min) + "PM";
-        }
+        
+        else { output += std::to_string(hour - 12) + ":" + formatMinute(min) + std::to_string(min) + "PM"; }
     }
     else if (hour == -1 && min == -1){
         output += std::to_string(year);
@@ -158,9 +163,8 @@ std::string Date::formatMinute(int m) {
 int Date::getDayOfWeek(int y, int m, int d) {
     static int t[] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
     if ( m < 3 )
-    {
         y -= 1;
-    }
+    
     return (y + y/4 - y/100 + y/400 + t[m-1] + d) % 7;
 }
 
@@ -168,64 +172,78 @@ std::string Date::timeUntilDate(Task* task) {
     int amount;
     std::vector<int> TTD = task->date->timeUntilDate();
     std::string output = "";
+
     for (int i = 0; i < TTD.size(); i++) {
 
         amount = abs(TTD.at(i));
 
         if (TTD.at(i) < 0 && i == 0) {
             output += std::to_string(amount) + " year";
+            
             if (amount != 1) { output += "s"; }
+            
             output += " ago";
             break;
         }
         else if (TTD.at(i) > 0 && i == 0) {
             output +=  "In " + std::to_string(amount) + " year";
+            
             if (amount != 1) { output += "s"; }
             break;
         }
         if (TTD.at(i) < 0 && i == 1) {
             output += std::to_string(amount) + " month";
+            
             if (amount != 1) { output += "s"; }
+            
             output += " ago";
             break;
         }
         else if (TTD.at(i) > 0 && i == 1) {;
             output +=  "In " + std::to_string(amount) + " month";
+            
             if (amount != 1) { output += "s"; }
             break;
         }
         if (TTD.at(i) < 0 && i == 2) {
             output += std::to_string(amount) + " day";
+            
             if (amount != 1) { output += "s"; }
+            
             output += " ago";
             break;
         }
         else if (TTD.at(i) > 0 && i == 2) {
             output +=  "In " + std::to_string(amount) + " day";
+            
             if (amount != 1) { output += "s"; }
             break;
         }
         if (TTD.at(i) < 0 && i == 3) {
             output += std::to_string(amount) + " hour";
+            
             if (amount != 1) { output += "s"; }
+            
             output += " ago";
             break;
         }
         else if (TTD.at(i) > 0 && i == 3) {
-            amount = TTD.at(i);
             output += "In " + std::to_string(amount) + " hour";
+            
             if (amount != 1) { output += "s"; }
             break;
         }
         if (TTD.at(i) < 0 && i == 4) {
             output += std::to_string(amount) + " minute";
+            
             if (amount != 1) { output += "s"; }
+            
             output += " ago";
             break;
         }
         else if (TTD.at(i) > 0 && i == 4) {
-            amount = TTD.at(i);
             output += "In " + std::to_string(amount) + " minute";
+            
             if (amount != 1) { output += "s "; }
             break;
         }
@@ -236,10 +254,12 @@ std::string Date::timeUntilDate(Task* task) {
 long int Date::getDateInSeconds() {
     long int output = 0;
     std::vector<int> vec = this->timeUntilDate();
+    
     output += vec.at(4) * 60;
     output += vec.at(3) * 3600;
     output += vec.at(2) * 86400;
     output += vec.at(1) * 86400 * getNumberOfDays(year, month);
+    
     if (getNumberOfDays(year, 2) == 28)
         output += vec.at(0) * 365 * 86400;
     else
