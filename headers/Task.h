@@ -20,7 +20,7 @@ class Task {
     Date* date;
 
     Task(std::string title, std::string desc) : title(title), description(desc), subTask(nullptr), next(nullptr), prev(nullptr), date(nullptr) {}
-    ~Task() {}
+    ~Task();
     
     void editTitle(std::string t) { title = t; }
     std::string getTitle() { return title; }

@@ -4,6 +4,11 @@
 #include <string>
 #include "Task.h"
 
+#include <bits/stdc++.h>
+using std::cout;
+using std::cin; // remove
+using std::endl;
+
 class TaskList {
   private:
     bool compareTitle(Task*, Task*);
@@ -17,8 +22,6 @@ class TaskList {
         while (head != nullptr) {
             Task* curr = head;
             head = head->next;
-            if (curr->subTask != nullptr) { delete curr->subTask; }
-            if (curr->date != nullptr) { delete curr->date; }
             delete curr;
         }
         head = nullptr;

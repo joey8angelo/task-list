@@ -2,6 +2,18 @@
 #include "../headers/Task.h"
 #include "../headers/Date.h"
 
+
+#include <bits/stdc++.h> //remove
+
+Task::~Task() {
+    if (this->subTask != nullptr) { 
+        delete this->subTask; 
+    }
+    if (this->date != nullptr) { 
+        delete this->date; 
+    }
+}
+
 std::string Task::getFullTask() {
     std::string output = "Title: " + title;
     if (description != "") { output += "\nDescription: " + description; }

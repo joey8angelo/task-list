@@ -43,9 +43,6 @@ Task* TaskList::getTask(std::string title) {
 bool TaskList::remove(std::string t) {
     Task* curr = getTask(t);
     if (curr == nullptr) { return false; }
-    if (curr->subTask != nullptr) {
-        delete curr->subTask;
-    }
     if (curr == head) {
         if (head == tail) {
             head = nullptr;
