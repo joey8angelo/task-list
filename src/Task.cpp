@@ -2,9 +2,6 @@
 #include "../headers/Task.h"
 #include "../headers/Date.h"
 
-
-#include <bits/stdc++.h> //remove
-
 Task::~Task() {
     if (this->subTask != nullptr) { 
         delete this->subTask; 

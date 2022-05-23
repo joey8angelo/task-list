@@ -4,11 +4,6 @@
 #include <string>
 #include "Task.h"
 
-#include <bits/stdc++.h>
-using std::cout;
-using std::cin; // remove
-using std::endl;
-
 class TaskList {
   private:
     bool compareTitle(Task*, Task*);
