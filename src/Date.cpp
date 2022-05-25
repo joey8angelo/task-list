@@ -3,10 +3,6 @@
 #include "../headers/Date.h"
 #include "../headers/Task.h"
 
-bool Date::setDate(int y, int m, int d) {
-    return setDate(y, m, d, -1, -1);
-}
-
 bool Date::setDate(int y, int m, int d, int h, int min) {
     if (!isValidDate(y, m, d, h, min)) { return false; }
     

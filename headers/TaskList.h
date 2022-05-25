@@ -14,8 +14,7 @@ class TaskList {
     Task* tail;
     TaskList(): head(nullptr), tail(nullptr) {}
     ~TaskList();
-    void pushBack(std::string, std::string);
-    void pushBack(std::string t) { pushBack(t, ""); }
+    void pushBack(std::string, std::string d = "");
     bool remove(std::string);
     void printList();
     Task* getTask(std::string);

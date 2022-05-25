@@ -24,8 +24,7 @@ class Date {
 
     Date();
 
-    bool setDate(int, int, int, int, int);
-    bool setDate(int, int, int);
+    bool setDate(int, int, int, int h = -1, int min = -1);
     std::string getDateFormatted();
     std::string timeUntilDate(Task*);
     long int getDateInSeconds();

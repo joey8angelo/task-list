@@ -31,8 +31,7 @@ class Task {
     virtual void removeDate();
     virtual void addDate() { date = new Date; }
     virtual void removeSubTask();
-    virtual void addSubTask(std::string, std::string);
-    virtual void addSubTask(std::string t) {addSubTask(t, "");}
+    virtual void addSubTask(std::string, std::string description = "");
     virtual std::string getFullTask();
 };
 
@@ -41,8 +40,7 @@ class SubTask : public Task{
     SubTask(std::string title, std::string desc) : Task(title, desc) {}
 
     std::string getFullTask();
-    void addSubTask(std::string t, std::string d) { return; }
-    void addSubTask(std::string t) { return; }
+    void addSubTask(std::string t, std::string d = "") { return; }
     void addDate() { return; }
     void removeDate() { return; }
     void removeSubTask() { return; }
