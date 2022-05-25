@@ -4,23 +4,28 @@
 #include <bits/stdc++.h>
 #include "../headers/TaskList.h"
 #include "../headers/Task.h"
+#include "../headers/Undo.h"
 
 using std::cout;
 using std::cin;
 using std::endl;
 
-void insertTask(TaskList*);
-void removeTask(TaskList*);
-void addSubtask(TaskList*);
-void printList(TaskList*);
-void editTask(TaskList*);
-void addDate(TaskList*);
+void insertTask();
+void removeTask();
+void addSubtask();
+void printList();
+void edit();
+void addDate();
+void undo();
+void insertVec(Undo*);
+
+TaskList list;
+std::vector<Undo*> undoVec;
 
 int main () {
     int input = 1;
     std::string title;
     std::string subTitle;
-    TaskList list;
     Task* curr;
 
     while (input != 0) {
@@ -31,9 +36,11 @@ int main () {
         cout << "Enter \"4\" to print the list" << endl;
         cout << "Enter \"5\" to sort the list in alphabetical order" << endl;
         cout << "Enter \"6\" to edit a task" << endl;
-        cout << "Enter \"7\" to add a date to a task" << endl;
+        cout << "Enter \"7\" to set a tasks date" << endl;
         cout << "Enter \"8\" to sort the list in chronological order" << endl;
+        cout << "Enter \"9\" to undo" << endl;
         cout << "Enter \"0\" to quit\n: ";
+        
         cin >> input;
         cin.clear();
         cin.ignore(10000,'\n');
@@ -43,20 +50,19 @@ int main () {
             break;
 
           case 1:
-            insertTask(&list);
+            insertTask();
             break;
 
           case 2:
-            removeTask(&list);
+            removeTask();
             break;
 
           case 3:
-            addSubtask(&list);
-
+            addSubtask();
             break;
 
           case 4:
-            printList(&list);
+            printList();
             break;
 
           case 5:
@@ -64,15 +70,19 @@ int main () {
             break;
 
           case 6:
-            editTask(&list);
+            edit();
             break;
 
           case 7:
-            addDate(&list);
+            addDate();
             break;
+          
           case 8:
             list.sortByDate();
             break;
+          
+          case 9:
+            undo();
             
           default:
             break;
@@ -80,24 +90,26 @@ int main () {
     }
 }
 
-void insertTask(TaskList* list) {
+void insertTask() {
     std::string title;
 
     cout << "\033[2J\033[1;1H";
-    cout << "Insert Task" << endl << endl;;
+    cout << "Insert Task" << endl << endl;
     cout << "Enter the title for this task: ";
+
     std::getline(cin, title);
-    list->pushBack(title);
+    list.pushBack(title);
 }
 
-void removeTask(TaskList* list) {
+void removeTask() {
     std::string title;
 
     cout << "\033[2J\033[1;1H";
     cout << "Remove Task" << endl << endl;
     cout << "Enter the name of the task to remove: ";
     std::getline(cin, title);
-    if (!(list->remove(title))) {
+
+    if (!(list.remove(title))) {
         cout << "\033[2J\033[1;1H";
         cout << "Remove a Task" << endl << endl;
         cout << "Could not find task named \"" << title << "\"\nExiting Remove Task..." << endl;
@@ -105,7 +117,7 @@ void removeTask(TaskList* list) {
     }
 }
 
-void addSubtask(TaskList* list){
+void addSubtask(){
     std::string title;
     std::string subTitle;
     Task* curr;
@@ -114,9 +126,10 @@ void addSubtask(TaskList* list){
     cout << "Add Subtask" << endl << endl;
     cout << "Enter the name of the task to add a subtask to: ";
     std::getline(cin, title);
+
     cout << "\033[2J\033[1;1H";
     cout << "Add Subtask" << endl << endl;
-    curr = list->getTask(title);
+    curr = list.getTask(title);
 
     if (curr == nullptr) {
         cout << "Could not find task with the name \"" << title << "\"\nExiting Add Subtask..." << endl;
@@ -124,23 +137,26 @@ void addSubtask(TaskList* list){
         return;
     }
 
+    insertVec(new addNewSubtask(curr));
     cout << "Task: " << title << endl;
     cout << "Enter the name of the subtask: ";
+
     std::getline(cin, subTitle);
     curr->addSubTask(subTitle);
 }
 
-void printList(TaskList* list) {
+void printList() {
     std::string voidInput;
 
     cout << "\033[2J\033[1;1H";
     cout << "Print List" << endl << endl;
-    list->printList();
+    list.printList();
+
     cout << "Enter \"q\"to exit: ";
     std::getline(cin, voidInput); // do nothing
 }
 
-void editTask(TaskList* list) {
+void edit() {
     std::string title;
     int input;
     Task* curr;
@@ -149,9 +165,11 @@ void editTask(TaskList* list) {
     cout << "Edit Task" << endl << endl;
     cout << "Enter the name of the task: ";
     std::getline(cin, title);
+
     cout << "\033[2J\033[1;1H";
     cout << "Edit Task" << endl << endl;
-    curr = list->getTask(title);
+    curr = list.getTask(title);
+
     if (curr == nullptr) {
         cout << "Could not find task with the name \"" << title << "\"\nExiting Edit Task..." << endl;
         std::this_thread::sleep_for (std::chrono::seconds(3));
@@ -160,11 +178,19 @@ void editTask(TaskList* list) {
     
     cout << "\033[2J\033[1;1H";
     cout << "Edit " << title << endl << endl;
-    cout << "Enter \"1\" to edit the tasks title" << endl;
-    cout << "Enter \"2\" to edit the tasks description" << endl;
-    if (curr->subTask != nullptr) {
-        cout << "Enter \"3\" to edit the subtask" << endl;
+    cout << "Enter \"1\" to edit the title" << endl;
+    cout << "Enter \"2\" to edit the description" << endl;
+    if (curr->getDescription() != "") {
+        cout << "Enter \"3\" to remove the description" << endl;
     }
+    if (curr->date != nullptr) {
+        cout << "Enter \"4\" to remove the date" << endl;
+    }
+    if (curr->subTask != nullptr) {
+        cout << "Enter \"5\" to edit the subtask" << endl;
+        cout << "Enter \"6\" to remove the subtask" << endl;
+    }
+
     cout << ": ";
     cin >> input;
     cin.clear();
@@ -172,6 +198,7 @@ void editTask(TaskList* list) {
 
     switch (input) {
       case 1:
+        insertVec(new editTask(curr, title, curr->getDescription()));
         cout << "\033[2J\033[1;1H";
         cout << "Edit " << title << endl << endl;
         cout << "Enter the new title: ";
@@ -181,6 +208,7 @@ void editTask(TaskList* list) {
         return;
 
       case 2:
+        insertVec(new editTask(curr, title, curr->getDescription()));
         cout << "\033[2J\033[1;1H";
         cout << "Edit " << title << endl << endl;
         cout << "Enter the new description: ";
@@ -190,12 +218,31 @@ void editTask(TaskList* list) {
         return;
 
       case 3:
+        if (curr->getDescription() == "") { return; }
+        insertVec(new editTask(curr, title, curr->getDescription()));
+        curr->editDescription("");
+        
+        return;
+
+      case 4:
+        if (curr->date == nullptr) { return; }
+        insertVec(new removeDate(curr, curr->date->year, curr->date->month, 
+                                 curr->date->day, curr->date->hour, curr->date->min));
+        curr->removeDate();
+
+        return;
+
+      case 5:
         if (curr->subTask == nullptr) { return; }
+
+        insertVec(new editSubtask(curr->subTask, curr->subTask->getTitle(), curr->subTask->getDescription()));
+
         cout << "\033[2J\033[1;1H";
         cout << "Edit " << curr->subTask->getTitle() << endl << endl;
         cout << "Enter \"1\" to edit the subtasks title" << endl;
         cout << "Enter \"2\" to edit the subtasks description" << endl;
         cout << ": ";
+
         cin >> input;
         cin.clear();
         cin.ignore(10000,'\n');
@@ -222,40 +269,51 @@ void editTask(TaskList* list) {
           default:
             return;
         }
+
+      case 6:
+        if (curr->subTask == nullptr) { return; }
+        insertVec(new removeSubtask(curr, curr->subTask->getTitle(), curr->subTask->getDescription()));
+        curr->removeSubTask();
+
+        return;
+
       default:
-        break;
+        return;
     }          
 }
 
-void addDate(TaskList* list) {
+void addDate() {
     std::string input;
     std::string title;
     Task* curr;
     int y, m, d, h, min;
 
     cout << "\033[2J\033[1;1H";
-    cout << "Add Date" << endl << endl;
+    cout << "Set Date" << endl << endl;
     cout << "Enter the name of the task: ";
     std::getline(cin, title);
     cout << "\033[2J\033[1;1H";
-    cout << "Add Date" << endl << endl;
-    curr = list->getTask(title);
+    cout << "Set Date" << endl << endl;
+    curr = list.getTask(title);
 
     if (curr == nullptr) {
-        cout << "Could not find task with the name \"" << title << "\"\nExiting Add Date..." << endl;
+        cout << "Could not find task with the name \"" << title << "\"\nExiting Set Date..." << endl;
         std::this_thread::sleep_for (std::chrono::seconds(3));
         return;
     }
-    if (curr->date != nullptr) {
-        cout << title << " already has a date, to edit it go to \"Edit Task\"\nExiting Add Date..." << endl;
-        std::this_thread::sleep_for (std::chrono::seconds(3));
-        return;
+    if (curr->date == nullptr) {
+        insertVec(new addNewDate(curr));
+        curr->addDate();
+    }else {
+        insertVec(new editDate(curr, curr->date->year, curr->date->month, 
+                               curr->date->day, curr->date->hour, curr->date->min));
     }
 
     cout << "\033[2J\033[1;1H";
-    cout << "Add Date" << endl;
+    cout << "Set Date" << endl;
     cout << "Enter Date in form MM/DD/YYYY: ";
     cin >> input;
+
     m = atoi(input.substr(0, 2).c_str());
     d = atoi(input.substr(3, 4).c_str());
     y = atoi(input.substr(6, 9).c_str());
@@ -275,26 +333,48 @@ void addDate(TaskList* list) {
         h = atoi(input.substr(0, 2).c_str());
         min = atoi(input.substr(3, 4).c_str());
 
-        curr->addDate();
         bool date = curr->date->setDate(y, m, d, h, min);
 
         if (!date) {
-            curr->removeDate();
-            cout << "Invalid date\nExiting Add Date..." << endl;
+            undo();
+            cout << "Invalid date\nExiting Set Date..." << endl;
             std::this_thread::sleep_for (std::chrono::seconds(3));
             return;
         }
         return;
     }
     else {
-        curr->addDate();
         bool date = curr->date->setDate(y, m, d);
+
         if (!date) {
-            curr->removeDate();
-            cout << "Invalid date\nExiting Add Date..." << endl;
+            undo();
+            cout << "Invalid date\nExiting Set Date..." << endl;
             std::this_thread::sleep_for (std::chrono::seconds(3));
             return;
         }
         return;
     }
+}
+
+void undo() {
+    int vecSize = undoVec.size();
+    
+    if (vecSize == 0) {
+        cout << "Cannot undo further" << endl;
+        std::this_thread::sleep_for (std::chrono::seconds(2));
+        return;
+    }
+    else {
+        undoVec.at(vecSize - 1)->undo();
+        delete undoVec.at(vecSize - 1);
+        undoVec.erase(undoVec.end() - 1);
+    } 
+}
+
+void insertVec(Undo* undoObj) {
+    if (undoVec.size() > 10) {
+        delete undoVec.at(0);
+        undoVec.erase(undoVec.begin());
+    }
+    undoVec.push_back(undoObj);
 }

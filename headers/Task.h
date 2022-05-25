@@ -20,7 +20,7 @@ class Task {
     Date* date;
 
     Task(std::string title, std::string desc) : title(title), description(desc), subTask(nullptr), next(nullptr), prev(nullptr), date(nullptr) {}
-    ~Task() {}
+    ~Task();
     
     void editTitle(std::string t) { title = t; }
     std::string getTitle() { return title; }
@@ -28,8 +28,9 @@ class Task {
     void editDescription(std::string d) { description = d; }
     std::string getDescription() { return description; }
 
-    virtual void removeDate() { delete date; }
+    virtual void removeDate();
     virtual void addDate() { date = new Date; }
+    virtual void removeSubTask();
     virtual void addSubTask(std::string, std::string);
     virtual void addSubTask(std::string t) {addSubTask(t, "");}
     virtual std::string getFullTask();
@@ -43,7 +44,8 @@ class SubTask : public Task{
     void addSubTask(std::string t, std::string d) { return; }
     void addSubTask(std::string t) { return; }
     void addDate() { return; }
-    void removeDate() {return; }
+    void removeDate() { return; }
+    void removeSubTask() { return; }
 };
 
 #endif
