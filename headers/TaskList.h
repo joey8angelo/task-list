@@ -9,6 +9,7 @@ class TaskList {
     bool compareTitle(Task*, Task*);
     bool compareDate(Task*, Task*);
     void swap(Task*, Task*);
+    void swapHelper(Task*, Task*, Task*, Task*);
   public:
     Task* head;
     Task* tail;

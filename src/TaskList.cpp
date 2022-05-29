@@ -86,7 +86,7 @@ void TaskList::sortAlphabetically() {
     else if (head == tail) { return; }
     else if (head->next == tail) {
         if (compareTitle(tail, head)) {
-            swap(tail, head);
+            swap(head, tail); // (l, r)
         }
     } 
     else {
@@ -94,8 +94,7 @@ void TaskList::sortAlphabetically() {
         while (i != nullptr) {
             j = i;
             while (j->prev != nullptr && compareTitle(j, j->prev)) {
-                swap(j, j->prev);
-                j = j->prev;
+                swap(j->prev, j); // (l, r)
             }
             i = i->next;
         }
@@ -108,31 +107,8 @@ bool TaskList::compareTitle(Task* r, Task* l) {
     else {return false; }
 }
 
-void TaskList::sortByDate() {
-    Task* i;
-    Task* j;
-    if (head == nullptr) { return; }
-    else if (head == tail) { return; }
-    else if (head->next == tail) {
-        if (compareDate(tail, head)) {
-            swap(tail, head);
-        }
-    } 
-    else {
-        i = head->next;
-        while (i != nullptr) {
-            j = i;
-            while (j->prev != nullptr && compareDate(j, j->prev)) {
-                swap(j, j->prev);
-                j = j->prev;
-            }
-            i = i->next;
-        }
-
-    }
-}
-
 bool TaskList::compareDate(Task* r, Task* l) {
+    if (l->date == nullptr && r->date == nullptr) { return false; }
     if (l->date == nullptr) { return true; }
     if (r->date == nullptr) { return false; }
 
@@ -140,20 +116,48 @@ bool TaskList::compareDate(Task* r, Task* l) {
     else { return false; }
 }
 
-void TaskList::swap(Task* r, Task* l) {
-    std::string temp = r->getTitle();
-    r->editTitle(l->getTitle());
-    l->editTitle(temp);
-    
-    temp = r->getDescription();
-    r->editDescription(l->getDescription());
-    l->editDescription(temp);
+void TaskList::sortByDate() {
+    Task* i;
+    Task* j;
+    if (head == nullptr) { return; }
+    else if (head == tail) { return; }
+    else if (head->next == tail) {
+        if (compareDate(tail, head)) {
+            swap(head, tail); // (l, r)
+        }
+    } 
+    else {
+        i = head->next;
+        while (i != nullptr) {
+            j = i;
+            while (j->prev != nullptr && compareDate(j, j->prev)) {
+                swap(j->prev, j); // (l, r)
+            }
+            i = i->next;
+        }
 
-    SubTask* tempT = r->subTask;
-    r->subTask = l->subTask;
-    l->subTask = tempT;
+    }
+}
 
-    Date* tempD = r->date;
-    r->date = l->date;
-    l->date = tempD;
+void TaskList::swap(Task* l, Task* r) {
+    if (l == head) {
+        swapHelper(l, r, nullptr, r->next);
+        head = r;
+    }
+    else if (r == tail) {
+        swapHelper(l ,r, l->prev, nullptr);
+        tail = l;
+    }
+    else {
+        swapHelper(l, r, l->prev, r->next);
+    }
+}
+
+void TaskList::swapHelper(Task* l, Task* r, Task* ll, Task* rr) {
+    r->next = l;
+    r->prev = ll;
+    l->next = rr;
+    l->prev = r;
+    if (ll != nullptr) { ll->next = r; }
+    if (rr != nullptr) { rr->prev = l; }
 }
