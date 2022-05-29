@@ -33,8 +33,14 @@ std::vector<int> Date::timeUntilDate() {
     vec.push_back(year - (1900 + localTime->tm_year));
     vec.push_back(month - (1 + localTime->tm_mon));
     vec.push_back(day -(localTime->tm_mday));
-    vec.push_back(hour - (localTime->tm_hour));
-    vec.push_back(min - (localTime->tm_min));
+    if (hour == -1 || min == -1) {
+        vec.push_back(-1);
+        vec.push_back(-1);
+    }
+    else {
+        vec.push_back(hour - (localTime->tm_hour));
+        vec.push_back(min - (localTime->tm_min));
+    }
 
     return vec;
 }
@@ -215,6 +221,12 @@ std::string Date::timeUntilDate(Task* task) {
             if (amount != 1) { output += "s"; }
             break;
         }
+
+        if (TTD.at(i) == -1 && (i == 3 || i == 4)) { 
+            output += "Today";
+            break;
+        } // if no time set
+
         if (TTD.at(i) < 0 && i == 3) {
             output += std::to_string(amount) + " hour";
             
@@ -250,9 +262,13 @@ std::string Date::timeUntilDate(Task* task) {
 long int Date::getDateInSeconds() {
     long int output = 0;
     std::vector<int> vec = this->timeUntilDate();
-    
-    output += vec.at(4) * 60;
-    output += vec.at(3) * 3600;
+    if (vec.at(4) == -1) {
+        output += (60 * 60) + (23 * 3600); // equal to 00:00 on the next day
+    }
+    else {
+        output += vec.at(4) * 60;   // desired output is number larger than any time on the same day
+        output += vec.at(3) * 3600; // want to make dates with no time appear further down the list than timed counterpart
+    }
     output += vec.at(2) * 86400;
     output += vec.at(1) * 86400 * getNumberOfDays(year, month);
     
