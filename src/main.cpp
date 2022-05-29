@@ -33,10 +33,10 @@ int main () {
         cout << "Task List Menu\nEnter \"1\" to insert a new task" << endl;
         cout << "Enter \"2\" to remove a task" << endl;
         cout << "Enter \"3\" to add a subtask to a task" << endl;
-        cout << "Enter \"4\" to print the list" << endl;
-        cout << "Enter \"5\" to sort the list in alphabetical order" << endl;
+        cout << "Enter \"4\" to set a tasks date" << endl;
+        cout << "Enter \"5\" to print the list" << endl;
         cout << "Enter \"6\" to edit a task" << endl;
-        cout << "Enter \"7\" to set a tasks date" << endl;
+        cout << "Enter \"7\" to sort the list in alphabetical order" << endl;
         cout << "Enter \"8\" to sort the list in chronological order" << endl;
         cout << "Enter \"9\" to undo" << endl;
         cout << "Enter \"0\" to quit\n: ";
@@ -46,9 +46,6 @@ int main () {
         cin.ignore(10000,'\n');
 
         switch(input) {
-          case 0:
-            break;
-
           case 1:
             insertTask();
             break;
@@ -62,11 +59,11 @@ int main () {
             break;
 
           case 4:
-            printList();
+            addDate();
             break;
 
           case 5:
-            list.sortAlphabetically();
+            printList();
             break;
 
           case 6:
@@ -74,7 +71,7 @@ int main () {
             break;
 
           case 7:
-            addDate();
+            list.sortAlphabetically();
             break;
           
           case 8:
@@ -137,7 +134,7 @@ void addSubtask(){
         return;
     }
 
-    insertVec(new addNewSubtask(curr));
+    insertVec(new AddNewSubtask(curr));
     cout << "Task: " << title << endl;
     cout << "Enter the name of the subtask: ";
 
@@ -198,7 +195,7 @@ void edit() {
 
     switch (input) {
       case 1:
-        insertVec(new editTask(curr, title, curr->getDescription()));
+        insertVec(new EditTask(curr, title, curr->getDescription()));
         cout << "\033[2J\033[1;1H";
         cout << "Edit " << title << endl << endl;
         cout << "Enter the new title: ";
@@ -208,7 +205,7 @@ void edit() {
         return;
 
       case 2:
-        insertVec(new editTask(curr, title, curr->getDescription()));
+        insertVec(new EditTask(curr, title, curr->getDescription()));
         cout << "\033[2J\033[1;1H";
         cout << "Edit " << title << endl << endl;
         cout << "Enter the new description: ";
@@ -219,14 +216,14 @@ void edit() {
 
       case 3:
         if (curr->getDescription() == "") { return; }
-        insertVec(new editTask(curr, title, curr->getDescription()));
+        insertVec(new EditTask(curr, title, curr->getDescription()));
         curr->editDescription("");
         
         return;
 
       case 4:
         if (curr->date == nullptr) { return; }
-        insertVec(new removeDate(curr, curr->date->year, curr->date->month, 
+        insertVec(new RemoveDate(curr, curr->date->year, curr->date->month, 
                                  curr->date->day, curr->date->hour, curr->date->min));
         curr->removeDate();
 
@@ -235,7 +232,7 @@ void edit() {
       case 5:
         if (curr->subTask == nullptr) { return; }
 
-        insertVec(new editSubtask(curr->subTask, curr->subTask->getTitle(), curr->subTask->getDescription()));
+        insertVec(new EditSubtask(curr->subTask, curr->subTask->getTitle(), curr->subTask->getDescription()));
 
         cout << "\033[2J\033[1;1H";
         cout << "Edit " << curr->subTask->getTitle() << endl << endl;
@@ -272,7 +269,7 @@ void edit() {
 
       case 6:
         if (curr->subTask == nullptr) { return; }
-        insertVec(new removeSubtask(curr, curr->subTask->getTitle(), curr->subTask->getDescription()));
+        insertVec(new RemoveSubtask(curr, curr->subTask->getTitle(), curr->subTask->getDescription()));
         curr->removeSubTask();
 
         return;
@@ -302,10 +299,10 @@ void addDate() {
         return;
     }
     if (curr->date == nullptr) {
-        insertVec(new addNewDate(curr));
+        insertVec(new AddNewDate(curr));
         curr->addDate();
     }else {
-        insertVec(new editDate(curr, curr->date->year, curr->date->month, 
+        insertVec(new EditDate(curr, curr->date->year, curr->date->month, 
                                curr->date->day, curr->date->hour, curr->date->min));
     }
 

@@ -40,7 +40,7 @@ class SubTask : public Task{
     SubTask(std::string title, std::string desc) : Task(title, desc) {}
 
     std::string getFullTask();
-    void addSubTask(std::string t, std::string d = "") { return; }
+    void addSubTask(std::string t, std::string d = "-") { return; }
     void addDate() { return; }
     void removeDate() { return; }
     void removeSubTask() { return; }
