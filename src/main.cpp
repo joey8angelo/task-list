@@ -95,7 +95,7 @@ void insertTask() {
     cout << "Enter the title for this task: ";
 
     std::getline(cin, title);
-    list.pushBack(title);
+    list.pushBack(new Task(title));
 }
 
 void removeTask() {
@@ -106,7 +106,7 @@ void removeTask() {
     cout << "Enter the name of the task to remove: ";
     std::getline(cin, title);
 
-    if (!(list.remove(title))) {
+    if (!(list.remove(list.getTask(title)))) {
         cout << "\033[2J\033[1;1H";
         cout << "Remove a Task" << endl << endl;
         cout << "Could not find task named \"" << title << "\"\nExiting Remove Task..." << endl;

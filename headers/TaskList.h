@@ -15,8 +15,8 @@ class TaskList {
     Task* tail;
     TaskList(): head(nullptr), tail(nullptr) {}
     ~TaskList();
-    void pushBack(std::string, std::string d = "");
-    bool remove(std::string);
+    void pushBack(Task*);
+    bool remove(Task*);
     void printList();
     Task* getTask(std::string);
     void sortAlphabetically();

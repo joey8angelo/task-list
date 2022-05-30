@@ -19,7 +19,7 @@ class Task {
     SubTask* subTask;
     Date* date;
 
-    Task(std::string title, std::string desc) : title(title), description(desc), subTask(nullptr), next(nullptr), prev(nullptr), date(nullptr) {}
+    Task(std::string title, std::string desc = "") : title(title), description(desc), subTask(nullptr), next(nullptr), prev(nullptr), date(nullptr) {}
     ~Task();
     
     void editTitle(std::string t) { title = t; }
@@ -37,7 +37,7 @@ class Task {
 
 class SubTask : public Task{
   public:
-    SubTask(std::string title, std::string desc) : Task(title, desc) {}
+    SubTask(std::string title, std::string desc = "") : Task(title, desc) {}
 
     std::string getFullTask();
     void addSubTask(std::string t, std::string d = "-") { return; }
