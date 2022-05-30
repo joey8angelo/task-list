@@ -11,19 +11,19 @@ TaskList::~TaskList() {
     tail = nullptr;
 }
 
-void TaskList::pushBack(std::string t, std::string d) {
+void TaskList::pushBack(Task* task) {
     if (head == nullptr) {
-        head = new Task(t, d);
+        head = task;
         tail = head;
     }
     else if (head == tail) {
-        head->next = new Task(t, d);
+        head->next = task;
         tail = head->next;
         tail->prev = head;
     }
     else {
         Task* temp = tail;
-        tail->next = new Task(t, d);
+        tail->next = task;
         tail = tail->next;
         tail->prev = temp;
     }
@@ -50,8 +50,7 @@ Task* TaskList::getTask(std::string title) {
     return curr;
 }
 
-bool TaskList::remove(std::string t) {
-    Task* curr = getTask(t);
+bool TaskList::remove(Task* curr) {
     if (curr == nullptr) { return false; }
     if (curr == head) {
         if (head == tail) {

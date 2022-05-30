@@ -2,6 +2,7 @@
 #define UNDO_H
 
 #include "Task.h"
+#include "TaskList.h"
 
 class Undo {
   public:
@@ -10,24 +11,37 @@ class Undo {
     virtual void undo() = 0;
 };
 
+class AddNewTask : public Undo {
+  private:
+    TaskList* list;
+  public:
+    AddNewTask(Task* task, TaskList* list) : Undo(task), list(list) {}
+    void undo();
+};
+
 class EditTask : public Undo {
   protected:
     std::string title;
     std::string desc;
   public:
     EditTask(Task* task, std::string title, std::string desc) : Undo(task), title(title), desc(desc) {}
-    void undo() {
-        task->editTitle(title);
-        task->editDescription(desc);
-    }
+    void undo();
+};
+
+class RemoveTask : public Undo {
+  private:
+    TaskList* list;
+    Task t;
+  public:
+    RemoveTask(Task* task, TaskList* list) : Undo(task), t(*task), list(list) {}
+    ~RemoveTask();
+    void undo();
 };
 
 class AddNewDate : public Undo {
   public:
     AddNewDate(Task* task) : Undo(task) {}
-    void undo() {
-        task->removeDate();
-    }
+    void undo();
 };
 
 class EditDate : public Undo {
@@ -40,31 +54,20 @@ class EditDate : public Undo {
   public:
     EditDate(Task* task, int y, int m, int d, int h, int min) : 
              Undo(task), year(y), month(m), day(d), hour(h), min(min) {}
-    void undo() {
-        task->date->year = year;
-        task->date->month = month;
-        task->date->day = day;
-        task->date->hour = hour;
-        task->date->min = min;
-    }
+    void undo();
 };
 
 class RemoveDate : public EditDate {
   public:
     RemoveDate(Task* task, int y, int m, int d, int h, int min) : 
                EditDate(task, y, m, d, h, min) {}
-    void undo() {
-        task->addDate();
-        EditDate::undo();
-    }
+    void undo();
 };
 
 class AddNewSubtask : public Undo {
   public:
     AddNewSubtask(Task* task) : Undo(task) {}
-    void undo() {
-        task->removeSubTask();
-    }
+    void undo();
 };
 
 class EditSubtask : public Undo {
@@ -73,18 +76,13 @@ class EditSubtask : public Undo {
     std::string desc;
   public:
     EditSubtask(Task* task, std::string title, std::string desc) : Undo(task), title(title), desc(desc) {}
-    void undo() {
-        task->subTask->editTitle(title);
-        task->subTask->editDescription(desc);
-    }
+    void undo();
 };
 
 class RemoveSubtask : public EditSubtask {
   public:
     RemoveSubtask(Task* task, std::string title, std::string desc) : EditSubtask(task, title, desc) {}
-    void undo() {
-        task->subTask = new SubTask(title, desc);
-    }
+    void undo();
 };
 
 #endif
