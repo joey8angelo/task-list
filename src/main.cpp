@@ -96,6 +96,7 @@ void insertTask() {
 
     std::getline(cin, title);
     list.pushBack(new Task(title));
+    insertVec(new AddNewTask(list.getTask(title), &list));
 }
 
 void removeTask() {
@@ -105,8 +106,9 @@ void removeTask() {
     cout << "Remove Task" << endl << endl;
     cout << "Enter the name of the task to remove: ";
     std::getline(cin, title);
-
+    insertVec(new RemoveTask(list.getTask(title), &list)); // IF GETTASK IN NULLPTR SEG FAULT
     if (!(list.remove(list.getTask(title)))) {
+        undo();
         cout << "\033[2J\033[1;1H";
         cout << "Remove a Task" << endl << endl;
         cout << "Could not find task named \"" << title << "\"\nExiting Remove Task..." << endl;
