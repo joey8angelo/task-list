@@ -4,6 +4,8 @@
 #include "Task.h"
 #include "TaskList.h"
 
+/* strategy pattern to implement different functionality for undo() for different types of actions */
+
 class Undo {
   public:
     Undo(Task* task) : task(task) {}

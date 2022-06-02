@@ -22,6 +22,7 @@ void insertVec(Undo*);
 bool saveData();
 bool loadData();
 
+/* Global variables for the ease of not having to pass them through every function */
 TaskList list;
 std::vector<Undo*> undoVec;
 
@@ -36,6 +37,7 @@ int main () {
     while (input != 0) {
         saveData();
 
+        /*This clears the terminal in vscode*/
         cout << "\033[2J\033[1;1H";
         cout << "Task List Menu\nEnter \"1\" to insert a new task" << endl;
         cout << "Enter \"2\" to remove a task" << endl;
@@ -48,6 +50,7 @@ int main () {
         cout << "Enter \"9\" to undo" << endl;
         cout << "Enter \"0\" to quit\n: ";
         
+        /* invalid input will get cleared */
         cin >> input;
         cin.clear();
         cin.ignore(10000,'\n');
@@ -103,7 +106,7 @@ void insertTask() {
 
     std::getline(cin, title);
     list.pushBack(new Task(title));
-    insertVec(new AddNewTask(list.getTask(title), &list));
+    insertVec(new AddNewTask(list.getTask(title), &list)); // insert undo object input insertVec
 }
 
 void removeTask() {
@@ -112,12 +115,15 @@ void removeTask() {
     cout << "\033[2J\033[1;1H";
     cout << "Remove Task" << endl << endl;
     cout << "Enter the name of the task to remove: ";
+
     std::getline(cin, title);
     Task* temp = list.getTask(title);
+
     if (temp != nullptr)
-        insertVec(new RemoveTask(temp, &list));
+        insertVec(new RemoveTask(temp, &list)); // RemoveTask undo object cannot take nullptr as a parameter
+
     if (!(list.remove(temp))) {
-        undo();
+        undo(); // if removing fails undo the RemoveTask that was just added
         cout << "\033[2J\033[1;1H";
         cout << "Remove a Task" << endl << endl;
         cout << "Could not find task named \"" << title << "\"\nExiting Remove Task..." << endl;
@@ -372,7 +378,7 @@ void undo() {
         std::this_thread::sleep_for (std::chrono::seconds(2));
         return;
     }
-    else {
+    else { // call undo on Undo object, then delete it
         undoVec.at(vecSize - 1)->undo();
         delete undoVec.at(vecSize - 1);
         undoVec.erase(undoVec.end() - 1);
@@ -380,7 +386,7 @@ void undo() {
 }
 
 void insertVec(Undo* undoObj) {
-    if (undoVec.size() > 10) {
+    if (undoVec.size() > 10) { // only undo up to 10 times, arbitrarily chosen
         delete undoVec.at(0);
         undoVec.erase(undoVec.begin());
     }
@@ -397,6 +403,7 @@ bool saveData() {
 		return false;
 	}
 
+  /* traverse through list, write task, date, subtask to data.csv */
 	while (curr != nullptr) {
 		fout << "task," << curr->getTitle() << "," << curr->getDescription() << "\n";
 		if (curr->date != nullptr) {
@@ -423,6 +430,10 @@ bool loadData() {
 		return false;
 	}
 
+  /* store each word of a line in vector. Depending on the type, specified by the first word will push to back of list
+  task,title,description
+  date,year,month,day,hour,minute
+  subtask,title,description */
 	while (std::getline(fin, line)) {
 		vec.clear();
 

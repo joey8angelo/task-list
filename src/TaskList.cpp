@@ -12,16 +12,16 @@ TaskList::~TaskList() {
 }
 
 void TaskList::pushBack(Task* task) {
-    if (head == nullptr) {
+    if (head == nullptr) { // 0
         head = task;
         tail = head;
     }
-    else if (head == tail) {
+    else if (head == tail) { // 1
         head->next = task;
         tail = head->next;
         tail->prev = head;
     }
-    else {
+    else { // 2+
         Task* temp = tail;
         tail->next = task;
         tail = tail->next;
@@ -78,6 +78,7 @@ bool TaskList::remove(Task* curr) {
     return true;
 }
 
+/* insertion sort */
 void TaskList::sortAlphabetically() {
     Task* i;
     Task* j;
@@ -99,20 +100,6 @@ void TaskList::sortAlphabetically() {
         }
 
     }
-}
-
-bool TaskList::compareTitle(Task* r, Task* l) {
-    if (r->getTitle() < l->getTitle()) { return true; }
-    else {return false; }
-}
-
-bool TaskList::compareDate(Task* r, Task* l) {
-    if (l->date == nullptr && r->date == nullptr) { return false; }
-    if (l->date == nullptr) { return true; }
-    if (r->date == nullptr) { return false; }
-
-    if (r->date->getDateInSeconds() < l->date->getDateInSeconds()) { return true; }
-    else { return false; }
 }
 
 void TaskList::sortByDate() {
@@ -138,6 +125,21 @@ void TaskList::sortByDate() {
     }
 }
 
+bool TaskList::compareTitle(Task* r, Task* l) {
+    if (r->getTitle() < l->getTitle()) { return true; }
+    else {return false; }
+}
+
+bool TaskList::compareDate(Task* r, Task* l) {
+    if (l->date == nullptr && r->date == nullptr) { return false; } // tasks with on date are "larger" than dated tasks
+    if (l->date == nullptr) { return true; }
+    if (r->date == nullptr) { return false; }
+
+    if (r->date->getDateInSeconds() < l->date->getDateInSeconds()) { return true; }
+    else { return false; }
+}
+
+/* get left, right, left previous, and right next to swap pointers */
 void TaskList::swap(Task* l, Task* r) {
     if (l == head) {
         swapHelper(l, r, nullptr, r->next);

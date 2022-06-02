@@ -33,6 +33,9 @@ Date::Date(int y, int m, int d, int h, int min) {
     this->min = min;
 }
 
+/* returns a vector indicating when the date set was 
+17 years, 2 months, 14 days, 8 hours, 15 minutes ago is represented
+{-17, -2, 14, 8, 15} */
 std::vector<int> Date::timeUntilDate() {
     std::vector<int> vec;
     std::time_t time = std::time(NULL);
@@ -78,6 +81,7 @@ bool Date::isValidDate(int y, int m, int d, int h, int min) {
     return true;
 }
 
+/* return a string with the formatted date "Wednesday June 1 2022 11:01 PM"*/
 std::string Date::getDateFormatted() {
     std::string output = "";
 
@@ -147,11 +151,11 @@ std::string Date::getDateFormatted() {
     output += std::to_string(day) + " ";
 
     if (hour >= 12) {
-        if (hour == 12) { output += std::to_string(hour) + ":" + formatMinute(min) + std::to_string(min) + "PM"; }
+        if (hour == 12) { output += std::to_string(hour) + ":" + formatMinute(min) + std::to_string(min) + " PM"; }
         
-        else if (hour == 24) { output += std::to_string(hour - 12) + ":" + formatMinute(min) + std::to_string(min) + "AM"; }
+        else if (hour == 24) { output += std::to_string(hour - 12) + ":" + formatMinute(min) + std::to_string(min) + " AM"; }
         
-        else { output += std::to_string(hour - 12) + ":" + formatMinute(min) + std::to_string(min) + "PM"; }
+        else { output += std::to_string(hour - 12) + ":" + formatMinute(min) + std::to_string(min) + " PM"; }
     }
     else if (hour == -1 && min == -1){
         output += std::to_string(year);
@@ -163,6 +167,7 @@ std::string Date::getDateFormatted() {
     return output;
 }
 
+/* if the minute is less than 10 print a 0 before it */
 std::string Date::formatMinute(int m) {
     if (m < 10) 
         return "0";
@@ -170,6 +175,7 @@ std::string Date::formatMinute(int m) {
         return "";
 }
 
+/* use the year, month, and day to find the day of the week */
 int Date::getDayOfWeek(int y, int m, int d) {
     static int t[] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
     if ( m < 3 )
@@ -178,6 +184,9 @@ int Date::getDayOfWeek(int y, int m, int d) {
     return (y + y/4 - y/100 + y/400 + t[m-1] + d) % 7;
 }
 
+/* format the vector from timeUntilDate(), takes the most significant value, leftmost value in the vector
+and returns a string with it represented in words
+{-17, -2, 14, 8, 15} will be "17 years ago"*/
 std::string Date::timeUntilDate(Task* task) {
     int amount;
     std::vector<int> TTD = task->date->timeUntilDate();
@@ -233,7 +242,7 @@ std::string Date::timeUntilDate(Task* task) {
         if (TTD.at(i) == -1 && (i == 3 || i == 4)) { 
             output += "Today";
             break;
-        } // if no time set
+        } // if no time set give general time
 
         if (TTD.at(i) < 0 && i == 3) {
             output += std::to_string(amount) + " hour";
@@ -267,15 +276,16 @@ std::string Date::timeUntilDate(Task* task) {
     return output;
 }
 
+/* return the time in seconds until the date */
 long int Date::getDateInSeconds() {
     long int output = 0;
     std::vector<int> vec = this->timeUntilDate();
     if (vec.at(4) == -1) {
-        output += (60 * 60) + (23 * 3600); // equal to 00:00 on the next day
-    }
-    else {
-        output += vec.at(4) * 60;   // desired output is number larger than any time on the same day
-        output += vec.at(3) * 3600; // want to make dates with no time appear further down the list than timed counterpart
+        output += (60 * 60) + (23 * 3600); // date with no time will be equivalent to the next day at 00:00
+    }                                      // desired output is larger than any time on the same day but still not larger than any time the next day
+    else {                                 // to make dates with no time appear further down the list than timed counterpart
+        output += vec.at(4) * 60;
+        output += vec.at(3) * 3600;
     }
     output += vec.at(2) * 86400;
     output += vec.at(1) * 86400 * getNumberOfDays(year, month);
