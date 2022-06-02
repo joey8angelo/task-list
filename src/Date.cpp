@@ -25,6 +25,14 @@ Date::Date() {
     min = localTime->tm_min;
 }
 
+Date::Date(int y, int m, int d, int h, int min) {
+    this->year = y;
+    this->month = m;
+    this->day = d;
+    this->hour = h;
+    this->min = min;
+}
+
 std::vector<int> Date::timeUntilDate() {
     std::vector<int> vec;
     std::time_t time = std::time(NULL);
