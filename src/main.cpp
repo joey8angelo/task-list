@@ -37,7 +37,7 @@ int main () {
     while (input != 0) {
         saveData();
 
-        /*This clears the terminal in vscode*/
+        /* This clears the terminal in vscode */
         cout << "\033[2J\033[1;1H";
         cout << "Task List Menu\nEnter \"1\" to insert a new task" << endl;
         cout << "Enter \"2\" to remove a task" << endl;
@@ -92,6 +92,11 @@ int main () {
             undo();
 
           default:
+            input = 0;
+            while (!undoVec.empty()) {
+                delete undoVec.at(input);
+                undoVec.erase(undoVec.begin());
+            }
             break;
         }
     }
