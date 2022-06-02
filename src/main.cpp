@@ -35,7 +35,7 @@ int main () {
 
     while (input != 0) {
         saveData();
-        
+
         cout << "\033[2J\033[1;1H";
         cout << "Task List Menu\nEnter \"1\" to insert a new task" << endl;
         cout << "Enter \"2\" to remove a task" << endl;
@@ -87,10 +87,6 @@ int main () {
           
           case 9:
             undo();
-        
-		  case 10:
-			saveData();
-			break;
 
           default:
             break;
