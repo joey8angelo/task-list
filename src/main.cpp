@@ -1,7 +1,8 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
-#include <bits/stdc++.h>
+#include <string>
+#include <fstream>
 #include "../headers/TaskList.h"
 #include "../headers/Task.h"
 #include "../headers/Undo.h"
@@ -18,6 +19,8 @@ void edit();
 void addDate();
 void undo();
 void insertVec(Undo*);
+bool saveData();
+bool loadData();
 
 TaskList list;
 std::vector<Undo*> undoVec;
@@ -28,7 +31,11 @@ int main () {
     std::string subTitle;
     Task* curr;
 
+	if (!loadData()) { return 1; }
+
     while (input != 0) {
+        saveData();
+        
         cout << "\033[2J\033[1;1H";
         cout << "Task List Menu\nEnter \"1\" to insert a new task" << endl;
         cout << "Enter \"2\" to remove a task" << endl;
@@ -80,7 +87,11 @@ int main () {
           
           case 9:
             undo();
-            
+        
+		  case 10:
+			saveData();
+			break;
+
           default:
             break;
         }
@@ -106,8 +117,10 @@ void removeTask() {
     cout << "Remove Task" << endl << endl;
     cout << "Enter the name of the task to remove: ";
     std::getline(cin, title);
-    insertVec(new RemoveTask(list.getTask(title), &list)); // IF GETTASK IN NULLPTR SEG FAULT
-    if (!(list.remove(list.getTask(title)))) {
+    Task* temp = list.getTask(title);
+    if (temp != nullptr)
+        insertVec(new RemoveTask(temp, &list));
+    if (!(list.remove(temp))) {
         undo();
         cout << "\033[2J\033[1;1H";
         cout << "Remove a Task" << endl << endl;
@@ -377,3 +390,73 @@ void insertVec(Undo* undoObj) {
     }
     undoVec.push_back(undoObj);
 }
+
+bool saveData() {
+	std::ofstream fout;
+	Task* curr = list.head;
+	
+	fout.open("../data.csv");
+
+	if (!fout.is_open()) {
+		return false;
+	}
+
+	while (curr != nullptr) {
+		fout << "task," << curr->getTitle() << "," << curr->getDescription() << "\n";
+		if (curr->date != nullptr) {
+			fout << "date," << std::to_string(curr->date->year) << "," << std::to_string(curr->date->month) << "," 
+			                << std::to_string(curr->date->day) << "," << std::to_string(curr->date->hour) << "," << std::to_string(curr->date->min) << "\n";
+		}
+		if (curr->subTask != nullptr) {
+			fout << "subtask," << curr->subTask->getTitle() << "," << curr->subTask->getDescription() << "\n";
+		}
+		curr = curr->next;
+	}
+	fout.close();
+	return true;
+}
+
+bool loadData() {
+	std::ifstream fin;
+	std::string line, word;
+	std::vector<std::string> vec;
+
+	fin.open("../data.csv");
+
+	if (!fin.is_open()) {
+		return false;
+	}
+
+	while (std::getline(fin, line)) {
+		vec.clear();
+
+		word = "";
+		for (int i = 0; i < line.length(); i++) {
+			if (line[i] == ',') {
+				vec.push_back(word);
+				word = "";
+			}
+			else
+				word += line[i];
+		}
+		vec.push_back(word);
+
+		if (vec.at(0) == "task") {
+			list.pushBack(new Task(vec.at(1), vec.at(2)));
+		}
+		else if (vec.at(0) == "date") {
+			int y, m, d, h, min;
+			y = atoi(vec.at(1).c_str());
+			m = atoi(vec.at(2).c_str());
+			d = atoi(vec.at(3).c_str());
+			h = atoi(vec.at(4).c_str());
+			min = atoi(vec.at(5).c_str());
+			list.tail->date = new Date(y, m, d, h, min);
+		}
+		else if (vec.at(0) == "subtask") {
+		    list.tail->subTask = new SubTask(vec.at(1), vec.at(2));
+		}
+	}
+	return true;
+}
+
