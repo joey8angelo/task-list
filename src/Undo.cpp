@@ -11,10 +11,12 @@ void EditTask::undo() {
 
 void RemoveTask::undo() {
     list->pushBack(task);
+    task = nullptr;
 }
 
-RemoveTask::~RemoveTask() {
-    delete task;
+RemoveTask::~RemoveTask() { // RemoveTask is the only Undo that stores a pointer to a Task
+    if (task != nullptr)    // that is not in the list, its deletion is not handled by TaskList anymore
+        delete task;        // unless it gets put back in the list
 }
 
 void AddNewDate::undo() {
