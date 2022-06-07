@@ -37,7 +37,7 @@ int main () {
     while (input != 0) {
         saveData();
 
-        /* This clears the terminal in vscode */
+        /* This clears the terminal */
         cout << "\033[2J\033[1;1H";
         cout << "Task List Menu\nEnter \"1\" to insert a new task" << endl;
         cout << "Enter \"2\" to remove a task" << endl;
@@ -90,6 +90,7 @@ int main () {
           
           case 9:
             undo();
+            break;
 
           default:
             input = 0;
@@ -124,11 +125,11 @@ void removeTask() {
     std::getline(cin, title);
     Task* temp = list.getTask(title);
 
-    if (temp != nullptr)
+    if (temp != nullptr) {
         insertVec(new RemoveTask(temp, &list)); // RemoveTask undo object cannot take nullptr as a parameter
-
-    if (!(list.remove(temp))) {
-        undo(); // if removing fails undo the RemoveTask that was just added
+        list.softRemove(temp);
+    }
+    else {
         cout << "\033[2J\033[1;1H";
         cout << "Remove a Task" << endl << endl;
         cout << "Could not find task named \"" << title << "\"\nExiting Remove Task..." << endl;

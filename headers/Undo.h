@@ -9,7 +9,7 @@
 class Undo {
   public:
     Undo(Task* task) : task(task) {}
-    Undo() {}
+    virtual ~Undo() {}
     Task* task;
     virtual void undo() = 0;
 };
@@ -34,9 +34,8 @@ class EditTask : public Undo {
 class RemoveTask : public Undo {
   private:
     TaskList* list;
-    Task t;
   public:
-    RemoveTask(Task* task, TaskList* list) : t(*task), list(list) {}
+    RemoveTask(Task* task, TaskList* list) : Undo(task), list(list) {}
     ~RemoveTask();
     void undo();
 };

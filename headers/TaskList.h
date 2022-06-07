@@ -17,6 +17,7 @@ class TaskList {
     ~TaskList();
     void pushBack(Task*);
     bool remove(Task*);
+    bool softRemove(Task*);
     void printList();
     Task* getTask(std::string);
     void sortAlphabetically();

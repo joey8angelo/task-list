@@ -13,6 +13,10 @@ void RemoveTask::undo() {
     list->pushBack(task);
 }
 
+RemoveTask::~RemoveTask() {
+    delete task;
+}
+
 void AddNewDate::undo() {
     task->removeDate();
 }
@@ -41,8 +45,4 @@ void EditSubtask::undo() {
 
 void RemoveSubtask::undo() {
     task->subTask = new SubTask(title, desc);
-}
-
-RemoveTask::~RemoveTask() {
-    delete task;
 }

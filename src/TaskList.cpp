@@ -51,29 +51,36 @@ Task* TaskList::getTask(std::string title) {
 }
 
 bool TaskList::remove(Task* curr) {
+    if (softRemove(curr)) {
+        delete curr;
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+/* remove from the list but do not delete the task yet */
+bool TaskList::softRemove(Task* curr) {
     if (curr == nullptr) { return false; }
     if (curr == head) {
         if (head == tail) {
             head = nullptr;
             tail = head;
-            delete curr;
         }
         else {
             head = head->next;
-            delete curr;
             head->prev = nullptr;
         }
     }
     else if (curr == tail) {
         tail = curr->prev;
         tail->next = nullptr;
-        delete curr;
     }
     else {
         Task* prev = curr->prev;
         prev->next = curr->next;
         prev->next->prev = prev;
-        delete curr;
     }
     return true;
 }
